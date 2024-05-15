@@ -8,7 +8,9 @@ const authenticateToken = (req, res, next) => {
         return res.sendStatus(401);
     }
 
-    jwt.verify(token, '123', (err, user) => {
+    let secretKey = process.env.SECRET_KEY
+
+    jwt.verify(token, secretKey, (err, user) => {
         if (err) {
             return res.sendStatus(403);
         }

@@ -111,6 +111,7 @@ router.post("/", async (req, res) => {
     }
 
     const existingUser = await userModel.findOne({ email });
+
     if (existingUser) {
         return res.status(400).json({
             success: false,
@@ -119,6 +120,7 @@ router.post("/", async (req, res) => {
     }
 
     const existingSubUser = await userModel.findOne({ "subUser.email": email });
+  
     if (existingSubUser) {
         return res.status(400).json({
             success: false,
@@ -152,18 +154,76 @@ router.post("/", async (req, res) => {
 
         // Send verification email
         const transporter = nodemailer.createTransport({
-            service: 'yahoo',
+            service: process.env.EMAIL_SERVICE,
             auth: {
-                user: 'arunrajshanker1@yahoo.com',
-                pass: 'iarpmrghxjlynimi',
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
             },
         });
+
+       
      
         const mailOptions = {
-            from: 'arunrajshanker1@yahoo.com',
+            // from: 'arunrajshanker1@yahoo.com',
+            from: `Medpick ${process.env.EMAIL_USER}`,
             to: email,
             subject: 'Email Verification',
-            html: `<p>Click <a href="http://localhost:3000/verify/${verificationToken}">here</a> to verify your email address.</p>`,
+            html: `<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor:'pointer'
+        }
+        .container h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        .container p {
+            font-size: 16px;
+            color: #666;
+            margin: 20px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Verification</h1>
+        <p>Click the button below to verify your email address:</p>
+        
+        <a href="http://localhost:3000/signin/${verificationToken}" class="btn">Verify Email</a>
+    </div>
+</body>
+</html>`,
         };
 
         await transporter.sendMail(mailOptions);

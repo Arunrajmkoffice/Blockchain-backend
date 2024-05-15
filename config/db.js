@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const uri = 'mongodb+srv://arunrajshanker6:Mkmkmk9090@cluster0.mrqldhf.mongodb.net/?retryWrites=true&w=majority';
+const uri = process.env.MONGODB_URI;
 
 const connection = mongoose.connect(uri);
 module.express = {connection}

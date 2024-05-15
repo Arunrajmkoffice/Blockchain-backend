@@ -40,18 +40,18 @@ router.post("/", async (req, res) => {
        if (user.verificationToken!=="Success" && user.verificationToken!==undefined) {
         console.log("user.verificationToken",user.verificationToken)
             const transporter = nodemailer.createTransport({
-                service: 'yahoo',
+                service: process.env.EMAIL_SERVICE,
                 auth: {
-                    user: 'arunrajshanker1@yahoo.com',
-                    pass: 'iarpmrghxjlynimi',
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS,
                 },
             });
-         
+            
             const mailOptions = {
-                from: 'arunrajshanker1@yahoo.com',
+                from: `Medpick ${process.env.EMAIL_USER}`,
                 to: email,
                 subject: 'Email Verification',
-                html: `<p>Click <a href="http://localhost:3000/verify/${user.verificationToken}">here</a> to verify your email address.</p>`,
+                html: `<p>Click <a href="http://localhost:3000/signin/${user.verificationToken}">here</a> to verify your email address.</p>`,
             };
 
             await transporter.sendMail(mailOptions);
@@ -67,7 +67,7 @@ router.post("/", async (req, res) => {
 
         if (user.verificationToken==="Success") {
 
-            const secretKey = '123';
+            const secretKey = process.env.SECRET_KEY;
             const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '10h' });
             res.json({ message: 'Login Success', token, email: user.email, role: user.role, userId: user._id, vendorId: user.vendorId });
 
@@ -75,7 +75,7 @@ router.post("/", async (req, res) => {
         } 
         if (user.verificationToken===undefined) {
 
-            const secretKey = '123';
+            const secretKey = process.env.SECRET_KEY;
             const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '10h' });
             res.json({ message: 'Login Success', token, email: user.email, role: user.role, userId: user._id, vendorId: user.vendorId });
 

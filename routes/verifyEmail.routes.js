@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
             });
         }
 
-        user.verificationToken = 'Success'; // Clear the token after verification
+        user.verificationToken = 'Success'; 
         await user.save();
 
         res.json({

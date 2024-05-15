@@ -7,8 +7,8 @@ const axios = require('axios');
 const router = Router();
 router.use(authenticateToken);
 const { uploadImage } = require("./uploadImage.route");
-const embedingUrl = 'https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2'
-const hfToken =  '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'
+const embedingUrl =  process.env.EMBEDING_URL
+const hfToken =   process.env.HFTOKEN
 
 async function generateEmbedding(text){
     try {
@@ -78,9 +78,11 @@ router.post("/", async (req, res) => {
     });
   }
 
+
   try {
-    
+
     let data = [
+
       {
         productAt: "Us Warehouse",
         date: new Date().toISOString().slice(0, 10),
@@ -105,6 +107,7 @@ router.post("/", async (req, res) => {
         time: "",
         complete: false
       },
+      
     ];
 
 

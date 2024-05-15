@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -8,6 +9,8 @@ const userScan = require('./routes/userScan.routes')
 const password = require('./routes/password.routes');
 const subuser = require('./routes/subuser.routes');
 const vendor = require('./routes/vendor.routes');
+const deleteUser = require('./routes/deleteUser.routes');
+
 const verifyEmail = require('./routes/verifyEmail.routes');
 const imageRoute = require('./routes/image.routes');
 const bodyParser = require('body-parser');
@@ -35,6 +38,7 @@ app.use("/user-scan", userScan);
 app.use("/vendor", vendor);
 app.use("/image", imageRoute);
 app.use("/verify", verifyEmail);
+app.use("/user", deleteUser);
 app.use(cors());
 app.use(express.json());
 
