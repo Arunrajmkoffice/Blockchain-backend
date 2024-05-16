@@ -27,6 +27,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 require("dotenv").config()
 const PORT = process.env.PORT||9096
 
+
 app.use(cors());
 app.use(express.json());
 app.use("/signup", signupRoutes);
@@ -41,12 +42,9 @@ app.use("/vendor", vendor);
 app.use("/image", imageRoute);
 app.use("/verify", verifyEmail);
 app.use("/user", deleteUser);
-
-
-
-
 app.use(cors());
 app.use(express.json());
+
 
 app.listen(PORT,async()=>{
     console.log("Listining to port 9096")
