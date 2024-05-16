@@ -46,7 +46,8 @@ function generateImageName(imageData) {
 }
 
 router.post("/", async (req, res) => {
-  
+
+
   const {
     product,
     price,
@@ -153,7 +154,6 @@ router.post("/", async (req, res) => {
   
 let vText = `${uniqueProduct} ${description} ${brand} ${category} ${tag}`
     
-
 
 
 async function generateQRCode() {
@@ -273,15 +273,7 @@ router.get("/", async (req, res) => {
     res.json({ products, totalCount:products.length });
      }
 
-
-
-     
-    
-
-
-
-
-     if((role==="Medorna Office"&& vendorId!=="all") || role==="Us Warehouse" ){
+     if((role==="Medorna Office" && vendorId!=="all") || role==="Us Warehouse" ){
       let products = await productDetailsModel
       .find({ ...query, vendorId: vendorId })
       .sort(sortOption)
@@ -289,12 +281,7 @@ router.get("/", async (req, res) => {
       .limit(parseInt(limit));
       res.json({ products, totalCount:products.length });
     }
-
    }
-   
-    
-    
-  
 
   } catch (error) {
     console.error("Error fetching products:", error);
