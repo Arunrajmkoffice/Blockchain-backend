@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
             });
         }
 
-        user.verificationToken = 'Success'; 
+        user.verificationToken = undefined; 
         await user.save();
 
         res.json({

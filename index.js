@@ -10,6 +10,7 @@ const password = require('./routes/password.routes');
 const subuser = require('./routes/subuser.routes');
 const vendor = require('./routes/vendor.routes');
 const deleteUser = require('./routes/deleteUser.routes');
+const changePassword = require('./routes/changePassword.routes');
 
 const verifyEmail = require('./routes/verifyEmail.routes');
 const imageRoute = require('./routes/image.routes');
@@ -34,11 +35,16 @@ app.use("/product", productDetails);
 app.use("/convert", convertAndSave);
 app.use("/password", password);
 app.use("/subuser", subuser);
+app.use("/change-password", changePassword);
 app.use("/user-scan", userScan);
 app.use("/vendor", vendor);
 app.use("/image", imageRoute);
 app.use("/verify", verifyEmail);
 app.use("/user", deleteUser);
+
+
+
+
 app.use(cors());
 app.use(express.json());
 

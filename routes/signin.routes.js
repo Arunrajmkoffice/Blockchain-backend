@@ -37,8 +37,8 @@ router.post("/", async (req, res) => {
 
 
 
-       if (user.verificationToken!=="Success" && user.verificationToken!==undefined) {
-        console.log("user.verificationToken",user.verificationToken)
+       if (user.verificationToken) {
+    
             const transporter = nodemailer.createTransport({
                 service: process.env.EMAIL_SERVICE,
                 auth: {
@@ -65,22 +65,22 @@ router.post("/", async (req, res) => {
 
 
 
-        if (user.verificationToken==="Success") {
+        // if (user.verificationToken==="Success") {
 
             const secretKey = process.env.SECRET_KEY;
             const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '10h' });
-            res.json({ message: 'Login Success', token, email: user.email, role: user.role, userId: user._id, vendorId: user.vendorId });
+            res.json({ message: 'Login Success', token, email: user.email, name:user.name, vendorName:user.vendorName, address:user.address,  role: user.role, userId: user._id, vendorId: user.vendorId });
 
 
-        } 
-        if (user.verificationToken===undefined) {
+        // } 
+        // if (user.verificationToken===undefined) {
 
-            const secretKey = process.env.SECRET_KEY;
-            const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '10h' });
-            res.json({ message: 'Login Success', token, email: user.email, role: user.role, userId: user._id, vendorId: user.vendorId });
+        //     const secretKey = process.env.SECRET_KEY;
+        //     const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '10h' });
+        //     res.json({ message: 'Login Success', token, email: user.email, role: user.role, userId: user._id, vendorId: user.vendorId });
 
 
-        } 
+        // } 
 
 
 

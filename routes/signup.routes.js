@@ -92,12 +92,12 @@ const nodemailer = require('nodemailer');
 
 
 router.post("/", async (req, res) => {
-    const { email, password, role, subUser } = req.body;
+    const { email, password, role, subUser, name, vendorName, address } = req.body;
 
-    if (!email || !password) {
+    if (!email || !password || !name || !vendorName || !address ||!role) {
         return res.status(400).json({
             success: false,
-            message: "Email and password are mandatory"
+            message: "All fields are mandatory."
         });
     }
 
@@ -143,6 +143,9 @@ router.post("/", async (req, res) => {
     const newUser = new userModel({
         email,
         password: password,
+        name,
+        vendorName,
+        address,
         role,
         subUser,
         vendorId,

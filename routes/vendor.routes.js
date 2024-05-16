@@ -7,8 +7,8 @@ router.use(authenticateToken);
 router.get("/", async (req, res) => {
 
     try {
-    const vendor = await userModel.find({}).select('email vendorId -_id').lean();
-    
+    // const vendor = await userModel.find({}).select('email vendorId -_id').lean();
+    const vendor = await userModel.find({}).select('email vendorId vendorName -_id').lean();
       if (!vendor) {
         res.status(404).json({
           success: false,

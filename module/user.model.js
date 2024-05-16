@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema({
     vendorId:{type:String,require:false},
     subUser:[subUserSchema],
     verificationToken:{type:String,require:false},
+    resetToken:{type:String,require:false},
+    resetTokenExpiration: {type:String,require:false},
+    vendorName:{type:String,require:false},
+    name:{type:String,require:false},
+    address:{type:String,require:false},
 })
 
 const userModel = mongoose.model("userCridential", userSchema)
