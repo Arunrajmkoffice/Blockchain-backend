@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { v4: uuidv4 } = require('uuid');
 const { productDetailsModel } = require("../module/productDetails.model");
+const { productSetModel } = require("../module/productSet.model");
 const { userModel } = require("../module/user.model");
 const authenticateToken = require("../middleware/authenticateToken");
 const axios = require('axios');
@@ -118,10 +119,8 @@ router.post("/", async (req, res) => {
       const lastPart = nameParts[nameParts.length - 1];
       const existingCount = isNaN(parseInt(lastPart)) ? null : parseInt(lastPart);
     
-
       const currentCount = existingCount !== null ? existingCount : count;
     
-
       const name = existingCount !== null ? nameParts.slice(0, -1).join('-') : productName;
     
       const existingProduct = await productDetailsModel.findOne({ product: productName }).sort({ createdDate: -1 });
@@ -143,6 +142,11 @@ router.post("/", async (req, res) => {
     const uniqueProduct = await generateUniqueProductName(product);
     const modifiedProductName = uniqueProduct.replace(/\s+/g, '-').toLowerCase();
    
+
+
+
+
+
 
    
     const imageLinks = [];
@@ -171,40 +175,98 @@ async function generateQRCode() {
   return qrCode
 }
 
+if(uniqueProduct===product){
+
+  const newProduct = new productDetailsModel({
+    product: uniqueProduct,
+    createdDate: new Date().toISOString().slice(0, 10),
+    createdTime: new Date().toLocaleTimeString(),
+    price: price,
+    tracking: data,
+    sku: sku,
+    branchNumber: branchNumber,
+    countryOfOrigin: countryOfOrigin,
+    inventory: inventory,
+    description: description,
+    tag: tag,
+    brand: brand,
+    category: category,
+    salesPrice: salesPrice,
+    image: imageLinks,
+    id:modifiedProductName,
+    plot_embedding_hf:await generateEmbedding(vText),
+    vendorId:vendorId,
+    qr:await generateQRCode()
+  });
 
 
+  const newUniqueProduct = new productSetModel({
+    product: uniqueProduct,
+    createdDate: new Date().toISOString().slice(0, 10),
+    createdTime: new Date().toLocaleTimeString(),
+    price: price,
+    tracking: data,
+    sku: sku,
+    branchNumber: branchNumber,
+    countryOfOrigin: countryOfOrigin,
+    inventory: inventory,
+    description: description,
+    tag: tag,
+    brand: brand,
+    category: category,
+    salesPrice: salesPrice,
+    image: imageLinks,
+    id:modifiedProductName,
+    plot_embedding_hf:await generateEmbedding(vText),
+    vendorId:vendorId,
+    qr:await generateQRCode()
+  });
+  
+  
+  await newUniqueProduct.save();
+  
+  await newProduct.save();
 
+  res.status(201).json({
+    success: true,
+    message: "Product created successfully",
+    data: newProduct,
+  });
 
+}
 
-    const newProduct = new productDetailsModel({
-      product: uniqueProduct,
-      createdDate: new Date().toISOString().slice(0, 10),
-      createdTime: new Date().toLocaleTimeString(),
-      price: price,
-      tracking: data,
-      sku: sku,
-      branchNumber: branchNumber,
-      countryOfOrigin: countryOfOrigin,
-      inventory: inventory,
-      description: description,
-      tag: tag,
-      brand: brand,
-      category: category,
-      salesPrice: salesPrice,
-      image: imageLinks,
-      id:modifiedProductName,
-      plot_embedding_hf:await generateEmbedding(vText),
-      vendorId:vendorId,
-      qr:await generateQRCode()
-    });
+if(uniqueProduct!==product){
+  const newProduct = new productDetailsModel({
+    product: uniqueProduct,
+    createdDate: new Date().toISOString().slice(0, 10),
+    createdTime: new Date().toLocaleTimeString(),
+    price: price,
+    tracking: data,
+    sku: sku,
+    branchNumber: branchNumber,
+    countryOfOrigin: countryOfOrigin,
+    inventory: inventory,
+    description: description,
+    tag: tag,
+    brand: brand,
+    category: category,
+    salesPrice: salesPrice,
+    image: imageLinks,
+    id:modifiedProductName,
+    plot_embedding_hf:await generateEmbedding(vText),
+    vendorId:vendorId,
+    qr:await generateQRCode()
+  });
 
-    await newProduct.save();
+  await newProduct.save();
 
-    res.status(201).json({
-      success: true,
-      message: "Product created successfully",
-      data: newProduct,
-    });
+  res.status(201).json({
+    success: true,
+    message: "Product created successfully",
+    data: newProduct,
+  });
+}
+   
     
   } catch (error) {
     console.error("Error creating product:", error);
@@ -497,5 +559,39 @@ router.patch("/edit/:id", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+
+
+
+
+
+router.get("/unique/one", async (req, res) => {
+ 
+  try {
+    const uniqueProduct = await productSetModel.find()
+    res.json({success:true, message: "Success", uniqueProduct });
+
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;

@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
     vendorName:{type:String,require:false},
     name:{type:String,require:false},
     address:{type:String,require:false},
+    
 })
 
 const userModel = mongoose.model("userCridential", userSchema)
