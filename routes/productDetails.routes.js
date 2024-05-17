@@ -139,7 +139,7 @@ router.post("/", async (req, res) => {
 
     
     const uniqueProduct = await generateUniqueProductName(product);
-    const modifiedProductName = uniqueProduct.replace(/\s+/g, '-').toLowerCase();
+    const modifiedProductName = `${uniqueProduct.replace(/\s+/g, '-').toLowerCase()}-${Math.random().toString(36).substr(2, 9)}`;
 
 
    
@@ -501,6 +501,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 router.patch("/edit/:id", async (req, res) => {
+
   const productId = req.params.id;
   const updatedProductDetails = req.body;
 
@@ -531,7 +532,7 @@ router.patch("/edit/:id", async (req, res) => {
   };
 
   const uniqueProductName = await generateUniqueProductName(updatedProductDetails.product);
-  const modifiedProductName = uniqueProductName.replace(/\s+/g, '-').toLowerCase();
+
 
   if (Object.keys(updatedProductDetails).length === 0) {
     return res.status(400).json({
@@ -543,7 +544,7 @@ router.patch("/edit/:id", async (req, res) => {
   try {
     const updatedProduct = await productDetailsModel.findByIdAndUpdate(
       productId,
-      { ...updatedProductDetails, product: uniqueProductName, id: modifiedProductName },
+      { ...updatedProductDetails, product: uniqueProductName,  },
       { new: true }
     );
     res.json({ ststus: true, message: "Product updated successfully" });
@@ -561,8 +562,12 @@ router.get("/unique/one", async (req, res) => {
   try {
 
 if(role==="Medorna Office" || role==="Us Warehouse" ){
+
   const uniqueProduct = await productSetModel.find({vendorId: vendorId})
+
   res.json({success:true, message: "Success", uniqueProduct });
+}else{
+  res.json({success:false, message: "You dont have the access" });
 }
 
 
