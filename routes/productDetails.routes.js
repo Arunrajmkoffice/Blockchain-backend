@@ -138,14 +138,8 @@ router.post("/", async (req, res) => {
 
 
     
- 
     const uniqueProduct = await generateUniqueProductName(product);
     const modifiedProductName = uniqueProduct.replace(/\s+/g, '-').toLowerCase();
-   
-
-
-
-
 
 
    
@@ -224,7 +218,6 @@ if(uniqueProduct===product){
   
   
   await newUniqueProduct.save();
-  
   await newProduct.save();
 
   res.status(201).json({
@@ -446,7 +439,7 @@ router.patch("/:id", async (req, res) => {
         { "qr._id": qrId },
         { "qr.$": 1 } 
       );
-      return res.status(400).json({
+      return res.json({
         success: false,
         message: "Already updated",
         product:product,
@@ -563,14 +556,16 @@ router.patch("/edit/:id", async (req, res) => {
 
 
 
-
-
-
 router.get("/unique/one", async (req, res) => {
- 
+  const { vendorId, role } = req.query
   try {
-    const uniqueProduct = await productSetModel.find()
-    res.json({success:true, message: "Success", uniqueProduct });
+
+if(role==="Medorna Office" || role==="Us Warehouse" ){
+  const uniqueProduct = await productSetModel.find({vendorId: vendorId})
+  res.json({success:true, message: "Success", uniqueProduct });
+}
+
+
 
   } catch (error) {
     console.error("Error fetching products:", error);
