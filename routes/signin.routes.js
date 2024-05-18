@@ -16,6 +16,23 @@ router.post("/", async (req, res) => {
         });
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid email format"
+    });
+  }
+
+  
+  const passwordRegex = /^.{8}$/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      success: false,
+      message: "Password must be at least 8 characters long."
+    });
+  }
+
     try {
         let user = await userModel.findOne({ email });
        

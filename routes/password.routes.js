@@ -6,7 +6,6 @@ const nodemailer = require('nodemailer');
 
 router.patch("/", async (req, res) => {
     const { email } = req.body;
-
     try {
      
         const user = await userModel.findOne({ email });

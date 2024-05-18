@@ -112,8 +112,9 @@ router.post("/", async (req, res) => {
       
     ];
 
+    
 
-    const generateUniqueProductName = async (productName, count = 1) => {
+    const generateUniqueProductName = async (productName, count=1) => {
 
       const nameParts = productName.split('-');
       const lastPart = nameParts[nameParts.length - 1];
@@ -230,6 +231,7 @@ if(uniqueProduct===product){
 
 if(uniqueProduct!==product){
   const newProduct = new productDetailsModel({
+
     product: uniqueProduct,
     createdDate: new Date().toISOString().slice(0, 10),
     createdTime: new Date().toLocaleTimeString(),
@@ -249,6 +251,7 @@ if(uniqueProduct!==product){
     plot_embedding_hf:await generateEmbedding(vText),
     vendorId:vendorId,
     qr:await generateQRCode()
+    
   });
 
   await newProduct.save();
@@ -561,7 +564,7 @@ router.get("/unique/one", async (req, res) => {
   const { vendorId, role } = req.query
   try {
 
-if(role==="Medorna Office" || role==="Us Warehouse" ){
+if(role==="Medorna Office" || role==="Us Warehouse"||!vendorId ){
 
   const uniqueProduct = await productSetModel.find({vendorId: vendorId})
 
@@ -585,8 +588,64 @@ if(role==="Medorna Office" || role==="Us Warehouse" ){
 
 
 
+router.delete("/unique/:id", async (req, res) => {
+  const { vendorId, role } = req.body;
+  const productId = req.params.id;
+  try {
+
+if(role==="Medorna Office" || role==="Us Warehouse" ){
+
+    const result = await productDetailsModel.findByIdAndDelete(productId);
+    if(result){
+      res.json({success:true, message: "Deleted successfully."});
+    }else{
+      res.json({success:false, message: "Product not found."});
+    }
+
+}else{
+  res.json({success:false, message: "You dont have the access to delete." });
+}
 
 
+
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+
+router.patch("/unique/:id", async (req, res) => {
+  const { vendorId, role } = req.body; 
+  const productId = req.params.id; 
+  const updates = req.body; 
+
+
+  try {
+    if (role === "Medorna Office" || role === "Us Warehouse") {
+
+      const uniqueProduct = await productSetModel.findOne({ vendorId: vendorId, _id: productId });
+
+      if (uniqueProduct) {
+        const updatedProduct = await productSetModel.findByIdAndUpdate(productId, price, sku);
+        res.json({ success: true, message: "Product updated successfully.", product: updatedProduct });
+      } else {
+        res.json({ success: false, message: "Product not found or you don't have access to update." });
+      }
+    } else {
+      res.json({ success: false, message: "You don't have the access to update." });
+    }
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
 
 
 
