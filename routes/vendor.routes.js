@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
         });
       }
     } catch (error) {
-      console.error("Error fetching vendor:", error);
+
       if (error.name === "CastError") {
         return res.status(400).json({
           success: false,

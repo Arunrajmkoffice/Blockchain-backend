@@ -10,16 +10,16 @@ router.delete('/:id', async (req, res) => {
     try {
   
       const deletedUser = await userModel.findByIdAndDelete(userId);
-      console.log("deletedUser",userId,deletedUser)
+  
       if (deletedUser) {
-        console.log(`User with ID ${userId} deleted successfully`);
+      
         res.json({ success: true, message: `User with ID ${userId} deleted successfully` });
       } else {
-        console.log(`User with ID ${userId} not found`);
+       
         res.status(404).json({ success: false, message: `User with ID ${userId} not found` });
       }
     } catch (error) {
-      console.error(`Error deleting user with ID ${userId}:`, error);
+    
       res.status(500).json({ success: false, message: `Error deleting user with ID ${userId}: ${error.message}` });
     }
   });

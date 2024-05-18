@@ -10,9 +10,9 @@ router.patch("/:id", async (req, res) => {
         message: 'Invalid product ID' });
     }
     try {
-      // const product = await productDetailsModel.findOne({ qr: { $elemMatch: { $eq: productId } } });
+
       const product = await productDetailsModel.findOne({ "qr._id": qrId },  {"plot_embedding_hf": 0 });
-      console.log("product",product)
+
       if (!product) {
         return res.status(404).json({
           success: false,
@@ -21,8 +21,7 @@ router.patch("/:id", async (req, res) => {
       }
       if(product){
         const qrIndex = product.qr.findIndex(qr => qr._id.toString() === qrId);
-        //       const matchingTrackIndex = product.qr[qrIndex].tracking
-        // console.log("matchingTrackIndex",matchingTrackIndex)
+
               const currentDate = new Date().toISOString().slice(0, 10);
               const currentTime = new Date().toLocaleTimeString();
           

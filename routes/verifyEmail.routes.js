@@ -23,7 +23,6 @@ router.post("/", async (req, res) => {
 
         user.verificationToken = undefined; 
         await user.save();
-
         res.json({
             success: true,
             message: "Email verified successfully"
