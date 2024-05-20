@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
   }
 
   
-  const passwordRegex = /^.{8}$/;
+  const passwordRegex = /^.{8,}$/;
   if (!passwordRegex.test(password)) {
     return res.status(400).json({
       success: false,
