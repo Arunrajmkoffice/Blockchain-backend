@@ -157,7 +157,7 @@ let vText = `${uniqueProduct} ${description} ${brand} ${category} ${tag}`
 
 
 async function generateQRCode() {
-  
+
   let qrCode = []
   for(let i=0; i<inventory; i++){
   
@@ -516,14 +516,12 @@ router.patch("/edit/:id", async (req, res) => {
     const existingCount = isNaN(parseInt(lastPart)) ? null : parseInt(lastPart);
   
     // If the product name already has a count, use that count
-    // Otherwise, use the provided count (default is 1)
     const currentCount = existingCount !== null ? existingCount : count;
   
     // Get the name by removing the last part if it's a count
     const name = existingCount !== null ? nameParts.slice(0, -1).join('-') : productName;
   
     const existingProduct = await productDetailsModel.findOne({ product: productName }).sort({ createdDate: -1 });
-  
     if (existingProduct) {
       // Increment the count and generate a new product name
       const newCount = currentCount + 1;
@@ -537,11 +535,10 @@ router.patch("/edit/:id", async (req, res) => {
 
   const uniqueProductName = await generateUniqueProductName(updatedProductDetails.product);
 
-
   if (Object.keys(updatedProductDetails).length === 0) {
     return res.status(400).json({
       ststus: false,
-      message: "At least one field is required to edit the data",
+      message: "At least one field is required to edit the data"
     });
   }
 
