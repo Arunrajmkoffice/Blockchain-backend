@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const csv = require('csv-parser');
 const { productDetailsModel } = require("../module/productDetails.model");
+const { productSetModel } = require("../module/productSet.model");
 const { Readable } = require('stream');
+const { ObjectId } = require('mongodb');
 const { v4: uuidv4 } = require('uuid');
 
 
@@ -25,30 +27,42 @@ router.post('/', async(req, res) => {
       return res.status(400).json({ message: 'Invalid or empty CSV data provided.' });
     }
 
+    if(!vendorId){
+      return res.status(400).json({ message: 'vendorId is mandatory.' });
+    }
+
+
+    const objectId = new ObjectId();
+
+
     const data = [
       {
         productAt: "Us Warehouse",
         date: new Date().toISOString().slice(0, 10),
         time: new Date().toLocaleTimeString(),
-        complete: true
+        complete: true,
+        _id:new ObjectId()
       },
       {
         productAt: "Medorna Office",
         date: "",
         time: "",
-        complete: false
+        complete: false,
+        _id:new ObjectId()
       },
       {
         productAt: "IGO Office",
         date: "",
         time: "",
-        complete: false
+        complete: false,
+        _id:new ObjectId()
       },
       {
         productAt: "Amazon Office",
         date: "",
         time: "",
-        complete: false
+        complete: false,
+        _id:new ObjectId()
       },
     ];
 
@@ -76,6 +90,7 @@ router.post('/', async(req, res) => {
 
 
     const products = [];
+    const productsUnique = [];
 
     const generateUniqueProductNameLocal = async (productName, count = 1) => {
       const nameParts = productName.split('-');
@@ -100,29 +115,52 @@ router.post('/', async(req, res) => {
     };
 
 
-    async function generateQRCode() {
-      let qrCode = []
+    // async function generateQRCode() {
+    //   let qrCode = []
     
-      for(let i=0; i<row.inventory; i++){
+    //   for(let i=0; i<row.inventory; i++){
       
-       let sData = {
-        tracking:data
-       }
+    //    let sData = {
+    //     tracking:data
+    //    }
       
-        qrCode.push(sData)
-      }
-      return qrCode
-    }
+    //     qrCode.push(sData)
+    //   }
+    //   return qrCode
+    // }
+
+
 
 
     for (const row of csvData) {
 
+
+      async function generateQRCode() {
+        let qrCode = []
+      
+        for(let i=0; i<row.inventory; i++){
+        
+         let sData = {
+          // qrCode:uuidv4(),
+          _id:new ObjectId(),
+          tracking:data
+         }
+        
+          qrCode.push(sData)
+        }
+        return qrCode
+      }
+
       const uniqueProductName = await generateUniqueProductName(row.product);
       const uniqueLocalProductName = await generateUniqueProductNameLocal(uniqueProductName);
       const uniqueProductNameFinalize = await generateUniqueProductName(uniqueLocalProductName);
-      const modifiedProductName = uniqueProductNameFinalize.replace(/\s+/g, '-').toLowerCase();
+      const modifiedProductName = `${uniqueProductNameFinalize.replace(/\s+/g, '-').toLowerCase()}-${Math.random().toString(36).substr(2, 9)}`;
 
       const trackingInfo = data.map(entry => ({ ...entry }));
+
+
+
+
 
       const product = {
         product: uniqueProductNameFinalize, 
@@ -142,17 +180,105 @@ router.post('/', async(req, res) => {
         image: [],
         id: modifiedProductName,
         vendorId:vendorId,
-        qr:await generateQRCode()
+        qr:await generateQRCode(),
+        _id:new ObjectId()
       };
 
       products.push(product);
+
+
+
+if(row.product===uniqueProductNameFinalize){
+  const product = {
+    product: uniqueProductNameFinalize, 
+    createdDate: new Date().toISOString().slice(0, 10),
+    createdTime: new Date().toLocaleTimeString(),
+    price: row.price,
+    tracking: trackingInfo,
+    sku: row.sku,
+    branchNumber: row.branchNumber,
+    countryOfOrigin: row.countryOfOrigin,
+    inventory: row.inventory,
+    description: row.description,
+    tag: row.tag,
+    brand: row.brand,
+    category: row.category,
+    salesPrice: row.salesPrice,
+    image: [],
+    id: modifiedProductName,
+    vendorId:vendorId,
+    qr:await generateQRCode(),
+    _id:new ObjectId()
+  };
+  productsUnique.push(product)
+}
+
     }
 
     
 
-    await productDetailsModel.insertMany(products);
+   let result1 = await productDetailsModel.insertMany(products);
+   result1.insertedIds
+   let result2 =  await productSetModel.insertMany(productsUnique);
+   result2.insertedIds
+
+
+    // const newProduct = new productDetailsModel({
+    //   product: uniqueProduct,
+    //   createdDate: new Date().toISOString().slice(0, 10),
+    //   createdTime: new Date().toLocaleTimeString(),
+    //   price: price,
+    //   tracking: data,
+    //   sku: sku,
+    //   branchNumber: branchNumber,
+    //   countryOfOrigin: countryOfOrigin,
+    //   inventory: inventory,
+    //   description: description,
+    //   tag: tag,
+    //   brand: brand,
+    //   category: category,
+    //   salesPrice: salesPrice,
+    //   image: imageLinks,
+    //   id:modifiedProductName,
+    //   plot_embedding_hf:await generateEmbedding(vText),
+    //   vendorId:vendorId,
+    //   qr:await generateQRCode()
+    // });
+  
+  
+    // const newUniqueProduct = new productSetModel({
+    //   product: uniqueProduct,
+    //   createdDate: new Date().toISOString().slice(0, 10),
+    //   createdTime: new Date().toLocaleTimeString(),
+    //   price: price,
+    //   tracking: data,
+    //   sku: sku,
+    //   branchNumber: branchNumber,
+    //   countryOfOrigin: countryOfOrigin,
+    //   inventory: inventory,
+    //   description: description,
+    //   tag: tag,
+    //   brand: brand,
+    //   category: category,
+    //   salesPrice: salesPrice,
+    //   image: imageLinks,
+    //   id:modifiedProductName,
+    //   plot_embedding_hf:await generateEmbedding(vText),
+    //   vendorId:vendorId,
+    //   qr:await generateQRCode()
+    // });
+    
+    
+    // await newUniqueProduct.save();
+    // await newProduct.insertMany(product);
+
+
+    // await productDetailsModel.insertMany(products);
+    // await newProduct.insertMany(products);
+
+
    
-    res.status(200).json({ message: 'CSV data uploaded successfully.', products });
+    res.status(200).json({ message: 'CSV data uploaded successfully.', products, productsUnique });
   } catch (error) {
     console.error('Error uploading CSV:', error);
     res.status(500).json({ message: 'Internal server error.' });

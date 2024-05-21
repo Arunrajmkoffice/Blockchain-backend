@@ -32,7 +32,7 @@ const trackingSchema = new mongoose.Schema({
      createdTime:{type:String,require:true},
      image:[imageSchema],
      tracking:[trackingSchema],
-     id: { type: String, required: true, unique: true },
+     id: { type: String, required: false, unique: false },
      plot_embedding_hf:{type:Array,require:false},
      vendorId:{type:String,require:true},
      qr:[qrSchema]

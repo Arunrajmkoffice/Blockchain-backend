@@ -157,8 +157,8 @@ let vText = `${uniqueProduct} ${description} ${brand} ${category} ${tag}`
 
 
 async function generateQRCode() {
+  
   let qrCode = []
-
   for(let i=0; i<inventory; i++){
   
    let sData = {

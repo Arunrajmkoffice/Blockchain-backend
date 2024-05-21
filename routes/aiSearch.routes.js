@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 const { productDetailsModel } = require("../module/productDetails.model");
 const { searchPath } = require("../module/searchPath.model");
 const { authenticateToken } = require("../middleware/authenticateToken");
+
 const router = Router();
 const dotenv = require('dotenv');
 
@@ -23,7 +24,9 @@ const hfToken =   process.env.HFTOKEN
 
 
 
+
 async function generateEmbedding(text){
+    // console.log("testttt",text)
     try {
         const response = await axios.post(
             embedingUrl,
@@ -32,7 +35,7 @@ async function generateEmbedding(text){
         );
 
         if (response.status !== 200) {
-            throw new Error(`Request Failed`);
+         console.log("response",response)
         }
 
          return response.data;
