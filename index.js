@@ -10,7 +10,8 @@ const password = require('./routes/password.routes');
 const subuser = require('./routes/subuser.routes');
 const vendor = require('./routes/vendor.routes');
 const deleteUser = require('./routes/deleteUser.routes');
-
+const refreshToken = require('./middleware/refreshToken')
+const logout = require('./middleware/logout')
 const pathPost = require('./routes/pathPost.routes');
 const aiSearch = require('./routes/aiSearch.routes');
 
@@ -49,6 +50,8 @@ app.use("/verify", verifyEmail);
 app.use("/user", deleteUser);
 app.use("/ai", aiSearch );
 app.use("/path", pathPost);
+app.use("/refresh", refreshToken);
+app.use("/logout", logout);
 app.use(cors());
 app.use(express.json());
 

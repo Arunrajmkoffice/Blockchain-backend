@@ -1,7 +1,9 @@
-const { Router } = require("express");
+
+const { authenticateToken } = require("../middleware/authenticateToken");
 const { userModel } = require("../module/user.model");
-const authenticateToken = require("../middleware/authenticateToken");
+const { Router } = require("express");
 const router = Router();
+
 router.use(authenticateToken);
 
 router.get("/", async (req, res) => {

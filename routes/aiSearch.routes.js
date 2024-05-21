@@ -5,9 +5,10 @@ const axios = require("axios")
 const { v4: uuidv4 } = require('uuid');
 const { productDetailsModel } = require("../module/productDetails.model");
 const { searchPath } = require("../module/searchPath.model");
-const authenticateToken = require("../middleware/authenticateToken");
+const { authenticateToken } = require("../middleware/authenticateToken");
 const router = Router();
 const dotenv = require('dotenv');
+
 
 router.use(authenticateToken);
 

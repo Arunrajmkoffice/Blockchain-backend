@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const { productDetailsModel } = require("../module/productDetails.model");
 const { productSetModel } = require("../module/productSet.model");
 const { userModel } = require("../module/user.model");
-const authenticateToken = require("../middleware/authenticateToken");
+const { authenticateToken } = require("../middleware/authenticateToken");
 const axios = require('axios');
 const router = Router();
 router.use(authenticateToken);
@@ -39,6 +39,7 @@ async function generateUniqueIds(count) {
 }
 
 const crypto = require("crypto");
+
 
 
 function generateImageName(imageData) {

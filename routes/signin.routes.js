@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { userModel } = require("../module/user.model");
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
+const { generateAccessToken } = require("../middleware/authenticateToken");
 
 
 router.post("/", async (req, res) => {
@@ -85,8 +86,10 @@ router.post("/", async (req, res) => {
         // if (user.verificationToken==="Success") {
 
             const secretKey = process.env.SECRET_KEY;
-            const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '10h' });
-            res.json({ message: 'Login Success', token, email: user.email, name:user.name, vendorName:user.vendorName, address:user.address,  role: user.role, userId: user._id, vendorId: user.vendorId });
+            // const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '10h' });
+            const token = generateAccessToken(user)
+            const refreshToken = jwt.sign({ userId: user._id }, '123');
+            res.json({ message: 'Login Success', token, email: user.email, name:user.name, vendorName:user.vendorName, address:user.address,  role: user.role, userId: user._id, vendorId: user.vendorId,refreshToken:refreshToken });
 
 
         // } 
