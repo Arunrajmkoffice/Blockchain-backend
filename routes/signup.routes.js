@@ -242,8 +242,7 @@ router.post("/", async (req, res) => {
 
         res.json({
             success: true,
-            message: "User created successfully. Verification email sent.",
-            newUser
+            message: "User created successfully. Verification email sent."
         });
     } catch (error) {
         res.status(500).json({
