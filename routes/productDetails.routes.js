@@ -486,8 +486,8 @@ router.patch("/:id", async (req, res) => {
 
     await product.save();
     const singleTrack = await productDetailsModel.findOne(
-      { "qr._id": qrId }, // Query to find the document with the matching QR ID
-      { "qr.$": 1 } // Projection to return only the matched element from the qr array
+      { "qr._id": qrId }, 
+      { "qr.$": 1 } 
     );
     res.status(200).json({
       success: true,

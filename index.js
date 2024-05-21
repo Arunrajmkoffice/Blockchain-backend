@@ -14,10 +14,7 @@ const refreshToken = require('./middleware/refreshToken')
 const logout = require('./middleware/logout')
 const pathPost = require('./routes/pathPost.routes');
 const aiSearch = require('./routes/aiSearch.routes');
-
-
 const changePassword = require('./routes/changePassword.routes');
-
 const verifyEmail = require('./routes/verifyEmail.routes');
 const imageRoute = require('./routes/image.routes');
 const bodyParser = require('body-parser');

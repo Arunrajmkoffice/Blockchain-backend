@@ -18,7 +18,7 @@ async function uploadImage(imageData) {
         });
         return result.secure_url;
     } else {
-        // Assume it's a URL and return it
+      
         return imageData;
     }
 }
