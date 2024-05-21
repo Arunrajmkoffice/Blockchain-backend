@@ -24,9 +24,6 @@ const bodyParser = require('body-parser');
 const productDetails = require('./routes/productDetails.routes');
 const convertAndSave = require('./routes/convert-and-save.routes');
 
-
-
-// app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -53,7 +50,6 @@ app.use("/path", pathPost);
 app.use("/refresh", refreshToken);
 app.use("/logout", logout);
 app.use(cors());
-app.use(express.json());
 
 
 app.listen(PORT,async()=>{
