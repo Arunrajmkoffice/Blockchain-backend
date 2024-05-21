@@ -15,7 +15,7 @@ router.use(authenticateToken);
 
 dotenv.config();
 
-const apiKey = 'AIzaSyAu6fp8Ni6Knyh7TbQLEYJZRVbzAHL_Fp4';
+const apiKey = process.env.GOOGLE_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const embedingUrl =  process.env.EMBEDING_URL
