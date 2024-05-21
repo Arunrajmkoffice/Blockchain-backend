@@ -156,7 +156,7 @@ router.post('/', async (req, res) => {
 
         const model = genAI.getGenerativeModel({ model: "gemini-pro" });
         const prompt = query;
-        const result = await model.generateContent(`${products} from this data "${prompt}", no other critical information needed more than that, make the information in a proper sendence. If the question in double inverted coma is not reguarging with given data, then reply Sorry I dont have that information.`);
+        const result = await model.generateContent(``);
         const response = await result.response;
         const text = response.text();
  
