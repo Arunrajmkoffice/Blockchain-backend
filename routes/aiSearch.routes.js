@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const express = require("express");
-const axios = require("axios")
 const { v4: uuidv4 } = require('uuid');
 const { productDetailsModel } = require("../module/productDetails.model");
 const { searchPath } = require("../module/searchPath.model");
@@ -25,21 +24,46 @@ const hfToken =   process.env.HFTOKEN
 
 
 
-async function generateEmbedding(text){
-    // console.log("testttt",text)
-    try {
-        const response = await axios.post(
-            embedingUrl,
-            { inputs: text },
-            { headers: { Authorization: `Bearer ${hfToken}` } }
-        );
+// async function generateEmbedding(text){
+//     // console.log("testttt",text)
+//     try {
+//         const response = await axios.post(
+//             embedingUrl,
+//             { inputs: text },
+//             { headers: { Authorization: `Bearer ${hfToken}` } }
+//         );
 
-        if (response.status !== 200) {
-         console.log("response",response)
+//         if (response.status !== 200) {
+//          console.log("response",response)
+//         }
+
+//          return response.data;
+//     } catch(error) {
+//         console.log("error", error);
+//     }
+// }
+
+
+async function generateEmbedding(text) {
+
+
+    try {
+        const response = await fetch(embedingUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${hfToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ inputs: text })
+        });
+
+        if (!response.ok) {
+            console.log("response", response);
         }
 
-         return response.data;
-    } catch(error) {
+        const data = await response.json();
+        return data;
+    } catch (error) {
         console.log("error", error);
     }
 }
@@ -49,7 +73,7 @@ async function generateEmbedding(text){
 router.post('/ai-two', async (req, res) => {
 
     const {query} = req.body
-    
+    console.log("query",query)
         results = await productDetailsModel.aggregate([
             {
                 $vectorSearch:{
